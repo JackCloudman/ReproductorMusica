@@ -10,11 +10,9 @@
   <object class="GtkWindow" id="ventana">
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="halign">center</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
@@ -22,9 +20,8 @@
             <property name="pixbuf">20767883_1350569234992863_2043919436836531969_n.jpg</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
           </packing>
         </child>
         <child>
@@ -33,18 +30,17 @@
             <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
-            <property name="margin_left">6</property>
-            <property name="margin_right">4</property>
             <property name="margin_top">4</property>
             <property name="margin_bottom">5</property>
-            <property name="homogeneous">True</property>
             <property name="layout_style">start</property>
             <child>
               <object class="GtkButton" id="BtnAnterior">
-                <property name="label" translatable="yes">Anterior</property>
+                <property name="label">gtk-media-previous</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="always_show_image">True</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -54,10 +50,12 @@
             </child>
             <child>
               <object class="GtkButton" id="BtnPlay">
-                <property name="label" translatable="yes">Play</property>
+                <property name="label">gtk-media-play</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="always_show_image">True</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -67,10 +65,12 @@
             </child>
             <child>
               <object class="GtkButton" id="BtnSiguiente">
-                <property name="label" translatable="yes">Siguiente</property>
+                <property name="label">gtk-media-next</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="always_show_image">True</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -80,9 +80,19 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="LabelSong">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Music player!</property>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">2</property>
           </packing>
         </child>
         <child>
@@ -90,18 +100,17 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="margin_left">6</property>
+            <property name="margin_right">4</property>
             <property name="margin_top">2</property>
             <property name="margin_bottom">3</property>
             <property name="adjustment">Tiempo</property>
-            <property name="round_digits">6</property>
             <property name="digits">6</property>
             <property name="draw_value">False</property>
             <property name="value_pos">left</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="left_attach">0</property>
+            <property name="top_attach">3</property>
           </packing>
         </child>
       </object>

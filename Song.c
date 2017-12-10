@@ -36,13 +36,12 @@ void on_playpause(Song* s) {
         printf("Pause song!\n");
     }
     else {//Si no se esta reproduciendo
-      if(libvlc_media_player_get_length(s->mediaPlayer)==-1){
-        open_media(s);
+      if(libvlc_media_player_get_length(s->mediaPlayer)==-1){//Si el tamaño del player es -1 significa que no hay media agregada
+        open_media(s);//Agregamos y reproducimos
       }
       else{
-        play_song(s);
+        play_song(s);//Si ya hay media agregada, solo reproducimos
       }
-        //play_song(s);//Reproducela!
         printf("Play song!\n");
     }
 }
