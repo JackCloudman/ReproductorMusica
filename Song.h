@@ -13,4 +13,5 @@ void pause_song(Song*);
 void stop_song(Song*);
 void open_media(Song*);
 void on_playpause(Song*);
+int delete_song(Song **);
 #endif

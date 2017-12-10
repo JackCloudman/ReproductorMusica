@@ -2,9 +2,10 @@
 #include <gtk/gtk.h>
 #include "Song.h"
 #include"Play_list.h"
-GObject *scale,*adjust,*LabelSong,*buttonplay;
+GObject *scale,*adjust,*LabelSong,*buttonplay,*path;
 gboolean _update_scale(gpointer data);
-GtkWidget *icon_image;
+GtkWidget *icon_image,*window;
+int* random_numbers;
 float current_play_time;
 void gtk_play(GtkButton *button, gpointer user_data){
   Play_list** l= user_data;
@@ -57,11 +58,57 @@ gboolean _update_scale(gpointer data){
 	g_signal_handlers_unblock_by_func(G_OBJECT(scale), on_value_change, l);
 	return G_SOURCE_CONTINUE;
 }
-int main(int argc,char* argv[]) {
-  Play_list * l1 = 0,*aux = 0;
+void gtk_random(GtkButton *button, gpointer user_data){
+  Play_list** l = user_data,*aux = 0;
   int n = 0;
+  random_list(l);
+  printf("New Random list:\n");
+  aux = *l;
+  do{
+    printf("%d- %s\n",n+1,aux->title);
+    aux = aux->next;
+    n+=1;
+  }while(aux!=(*l));
+  printf("====================\n");
+}
+void gtk_setPath(GtkButton *button, gpointer user_data){
+  //printf("%s\n",gtk_entry_get_text (GtkEntry(path)));
+  Play_list** l = user_data;
+  Play_list*aux = 0;
+  GtkWidget *dialog;
+  if(*l!=0){
+    delete_play_list(l);
+  }
+  GtkFileChooserAction action =  GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+  dialog = gtk_file_chooser_dialog_new("open file", GTK_WINDOW(window), action, ("Cancel"), GTK_RESPONSE_CANCEL, ("Open"), GTK_RESPONSE_ACCEPT, NULL);
+  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog),1);
+  if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+      char *uri;
+      uri = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(dialog))+7;
+      printf("%s\n",uri);
+      add_multiple_songs(l,uri);
+      g_free(uri-7);
+      int n = 0;
+      aux = *l;
+      if(aux==0){
+        printf("There aren't songs in this folder!\n");
+        gtk_widget_destroy(dialog);
+        return;
+      }
+      do{
+        printf("New Song list:\n");
+        printf("%d- %s\n",n+1,aux->title);
+        aux = aux->next;
+        n+=1;
+      }while(aux!=(*l));
+      printf("====================\n");
+  }
+  gtk_widget_destroy(dialog);
+}
+int main(int argc,char* argv[]) {
+  Play_list * l1 = 0;//*aux = 0;
+  //int n = 0;
   GtkBuilder *builder;
-  GtkWidget *window;
   GObject *button;
   gtk_init(&argc,&argv);
   builder = gtk_builder_new();
@@ -70,7 +117,8 @@ int main(int argc,char* argv[]) {
   gtk_window_set_default_size (GTK_WINDOW (window), 300, 200);
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
   //Usar tus propios path list
-  add_multiple_songs(&l1,"/home/jack/Desktop/Reproductor/");
+  //random_list(&l1);
+  //quit_song(&l1,0);
   /*add_song(&l1,"file:///home/jack/Desktop/Reproductor/Don't Stop Me Now (Remastered 2011).mp3");
   add_song(&l1,"file:///home/jack/Desktop/Reproductor/Foster The People - Pumped up Kicks   (MUSIC VIDEO).mp3");
   add_song(&l1,"file:///home/jack/Desktop/Reproductor/Banana Brain.mp3");
@@ -81,13 +129,13 @@ int main(int argc,char* argv[]) {
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(gtk_next), &l1);
   button = gtk_builder_get_object (builder, "BtnAnterior");
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(gtk_previous), &l1);
-  aux = l1;
-  printf("Current list:\n");
-  do{
-    printf("%d- %s\n",n+1,aux->title);
-    aux = aux->next;
-    n+=1;
-  }while(aux!=l1);
+  button = gtk_builder_get_object (builder, "random");
+  g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(gtk_random), &l1);
+  button = gtk_builder_get_object (builder, "setPath");
+  path = gtk_builder_get_object (builder, "Path");
+  g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(gtk_setPath), &l1);
+  //aux = l1;
+  printf("Len play_list:%d\n",len_play_list(&l1));
   printf("Creado con exito!\n");
   scale = gtk_builder_get_object (builder, "BarraTiempo");
   adjust = gtk_builder_get_object (builder, "Tiempo");

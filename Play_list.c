@@ -88,10 +88,93 @@ int add_multiple_songs(Play_list** l,char* path){
           strcpy(file,"");
           strcat(file,"file://");
           strcat(file,path);
+          strcat(file,"/");
           strcat(file,de->d_name);
           add_song(l,file,de->d_name);
         }
       }
   }
+  return 0;
+}
+int len_play_list(Play_list** l){
+  Play_list *aux = 0;
+  int i=0;
+  if(*l==0){
+    return i;
+  }
+  aux = *l;
+  do{
+    i++;
+    aux = aux->next;
+  }while(aux!=*l);
+  return i;
+}
+Play_list* quit_song(Play_list** l,int index){
+  int i = 0;
+  Play_list *aux = 0;
+  if(*l==0){
+    return 0;
+  }
+  if((index>len_play_list(l)-1)||index<0){
+    return 0;
+  }
+  aux = *l;
+  if(len_play_list(l)==1){
+    *l = 0;
+    return aux;
+  }
+  while(i!=index){
+    i++;
+    aux = aux->next;
+  }
+  aux->next->previous = aux->previous;
+  aux->previous->next = aux->next;
+  *l = aux->next;
+  aux->next = aux;
+  aux->previous = aux;
+  return aux;
+}
+void link_play_list(Play_list **l1,Play_list **l2){
+  if(*l1==0||*l2==0){
+    return;
+  }
+  Play_list *aux = (*l1)->previous;
+  Play_list *aux2 = *l2;
+  aux->next = aux2;
+  (*l1)->previous = aux2->previous;
+  aux2->previous->next = *l1;
+  aux->next->previous = aux;
+}
+void random_list(Play_list** l){
+  srand(time(NULL));
+  Play_list *aux = 0,*new = 0;
+  new = (Play_list*)malloc(sizeof(Play_list));
+  new->title = (*l)->title;
+  new->s = (*l)->s;
+  new->next = new;
+  new->previous = new;
+  aux = quit_song(l,0);
+  while(len_play_list(l)!=0){
+    aux = quit_song(l,rand()%(len_play_list(l)));
+    link_play_list(&new,&aux);
+  }
+  *l = new;
+}
+int delete_play_list(Play_list** l){
+  Play_list* aux = 0;
+  if(*l==0){
+    return -1;
+  }
+  (*l)->previous->next = 0;
+  aux = (*l)->next;
+  while(aux->next!=0){
+    printf("Borrando--");
+    delete_song(&(aux->previous->s));
+    free(aux->previous);
+    aux = aux->next;
+  }
+  delete_song(&(aux->s));
+  free(aux);
+  *l = 0;
   return 0;
 }

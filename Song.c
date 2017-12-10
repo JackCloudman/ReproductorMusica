@@ -45,3 +45,14 @@ void on_playpause(Song* s) {
         printf("Play song!\n");
     }
 }
+int delete_song(Song **s){
+  if(*s==0){
+    return -1;
+  }
+  libvlc_media_release((*s)->media);
+  libvlc_media_player_release((*s)->mediaPlayer);
+  libvlc_release((*s)->instance);
+  free(*s);
+  *s = 0;
+  return 0;
+}
