@@ -1,14 +1,14 @@
 #include "Play_list.h"
 #include<stdio.h>
 //Agregamos una cancion
-int add_song(Play_list** l,char* uri){
+int add_song(Play_list** l,char* uri,char* title){
   Play_list* aux=0;
   if(*l==0){//Si el apuntador a Play_list es 0, agregamos el primer nodo
     *l = (Play_list*)malloc(sizeof(Play_list));//Creamos el primer nodo
     (*l)->next = *l; //El siguiente y el anterior del primer elemento es la misma direccion creada
     (*l)->previous = *l;
     (*l)->s = create_song(uri); //usamos la funcion create_song para crear la cancion
-    (*l)->path = uri; //El path es solo para saber a que direccion apunta(No es necesaria)
+    (*l)->title = title; //El path es solo para saber a que direccion apunta(No es necesaria)
     return 0;
   }
   else{//Si no es el primer nodo
@@ -18,7 +18,7 @@ int add_song(Play_list** l,char* uri){
     aux = aux->next;//Ahora auxiliar es el ultimo dato
     aux->next = *l;//Su siguiente es el nodo del principio
     aux->s = create_song(uri);//Asignamos el dato
-    aux->path = uri; //Agregamos el path
+    aux->title = title; //Agregamos el path
     (*l)->previous = aux; //El anterior del primero ahora será el ultimo (El nuevo creado)
     return 0;
   }
@@ -72,5 +72,26 @@ int previous_song(Play_list** l){
     };*/
   //Volvemos al principio(Que es el inicio)
   open_media((*l)->s);//Agregamos la media y volvemos a reproducir
+  return 0;
+}
+int add_multiple_songs(Play_list** l,char* path){
+  char* name = 0,file[300];
+  struct dirent *de;
+  DIR *dr = opendir(path);
+  if (dr == NULL){
+    return -1;
+  }
+  while ((de = readdir(dr)) != NULL){
+      name = strrchr(de->d_name, '.');
+      if(name!=0){
+        if(strcmp(name,".mp3")==0){
+          strcpy(file,"");
+          strcat(file,"file://");
+          strcat(file,path);
+          strcat(file,de->d_name);
+          add_song(l,file,de->d_name);
+        }
+      }
+  }
   return 0;
 }
