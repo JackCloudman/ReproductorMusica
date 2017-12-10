@@ -1,4 +1,5 @@
 #include "Song.h"
+#include <stdio.h>
 /*La funcion "create_song recibe de parametro una ruta al a cual accedera VLC
 para poder crear el mediaplayer y entonces reproducir la cancion"*/
 Song* create_song(char* ruta){
@@ -32,8 +33,16 @@ void stop_song(Song* s){
 void on_playpause(Song* s) {
     if(libvlc_media_player_is_playing(s->mediaPlayer) == 1) {//Si se esta reproduciendo
         pause_song(s);//Pausa la cancion
+        printf("Pause song!\n");
     }
     else {//Si no se esta reproduciendo
-        play_song(s);//Reproducela!
+      if(libvlc_media_player_get_length(s->mediaPlayer)==-1){
+        open_media(s);
+      }
+      else{
+        play_song(s);
+      }
+        //play_song(s);//Reproducela!
+        printf("Play song!\n");
     }
 }

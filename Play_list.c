@@ -23,13 +23,11 @@ int add_song(Play_list** l,char* uri){
   }
 }
 int play_music_list(Play_list** l){
-  printf("Entro a la funcion x.x Valor: %p\n",l);
   if((*l)==0){
     return -1;
   }
   else{
     Song* s = (*l)->s;
-    printf("%s\n",(*l)->path);
     open_media(s);
   }
   return 0;
@@ -53,10 +51,8 @@ int previous_song(Play_list** l){
   if(((*l))==((*l)->previous)){
       return 1;
     };
-  printf("Current path: %s\n",(*l)->path);
   stop_song((*l)->s);
   *l = (*l)->previous;
-  printf("Current path: %s\n",(*l)->path);
   open_media((*l)->s);
   return 0;
 }
