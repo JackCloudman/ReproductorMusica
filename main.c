@@ -143,8 +143,12 @@ gboolean update_scale(gpointer data){
   /*verificamos que no haya terminado la cancion*/
   float value = current_play_time/video_length*100;
   if(libvlc_media_player_is_playing((*l)->s->mediaPlayer) == 0){//si ya no se esta reproduciendo nada
-    if(current_play_time-video_length>-300){//y la diferencia entre la posicion actual de la barra y el tamaño de la cancion es mayor a -300
+    if(current_play_time-video_length>-300&&video_length!=-1){//y la diferencia entre la posicion actual de la barra y el tamaño de la cancion es mayor a -300
       gtk_next(NULL,l);//Cambiamos de cancion(Esto se hace para poder cambiar a la siguiente cancion)
+    }
+    else{
+      icon_image = gtk_image_new_from_icon_name("media-playback-start", GTK_ICON_SIZE_BUTTON);
+      gtk_button_set_image(GTK_BUTTON(buttonplay), icon_image);//Cambiamos los iconos
     }
   }
   //Si aun no acaba la cancion
@@ -176,6 +180,7 @@ void gtk_setPath(GtkButton *button, gpointer user_data){
       uri = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(dialog))+7;//Obtenemos la direccion es +7 por que "file://" tiene 7 caracteres
       if(*l!=0){//Si la lista anterior no estaba vacia
         delete_play_list(l);//La borramos
+        printf("borrando...\n");
       }
       add_multiple_songs(l,uri);//Agregamos la nueva lista (Checar add_multiple_songs en Play_list.c)
       g_free(uri-7);//Liberamos la memoria
