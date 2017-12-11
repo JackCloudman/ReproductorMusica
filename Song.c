@@ -33,7 +33,6 @@ void stop_song(Song* s){
 void on_playpause(Song* s) {
     if(libvlc_media_player_is_playing(s->mediaPlayer) == 1) {//Si se esta reproduciendo
         pause_song(s);//Pausa la cancion
-        printf("Pause song!\n");
     }
     else {//Si no se esta reproduciendo
       if(libvlc_media_player_get_length(s->mediaPlayer)==-1){//Si el tamaño del player es -1 significa que no hay media agregada
@@ -42,17 +41,16 @@ void on_playpause(Song* s) {
       else{
         play_song(s);//Si ya hay media agregada, solo reproducimos
       }
-        printf("Play song!\n");
     }
 }
 int delete_song(Song **s){
-  if(*s==0){
+  if(*s==0){//Si el apuntador a cancion es 0, devolvemos un error
     return -1;
-  }
+  }//en caso contrarios liberamos la memoria
   libvlc_media_release((*s)->media);
   libvlc_media_player_release((*s)->mediaPlayer);
   libvlc_release((*s)->instance);
   free(*s);
-  *s = 0;
+  *s = 0;//El apuntador a cancion ahora será 0
   return 0;
 }
