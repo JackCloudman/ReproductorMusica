@@ -5,5 +5,5 @@ Proyecto para la asignatura "Estructuras de datos"
 * Agregar todas las canciones de un directorio(Ahora solo mp3)
 * Adelantar, atrasar, pausar la cancion en tiempo real
 ## Notas
-Para poder copilar correctamente el archivo, se necesita de la biblioteca
+Para poder compilar correctamente el archivo, se necesita de la biblioteca
 libvlc-dev
